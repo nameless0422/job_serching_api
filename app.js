@@ -10,6 +10,7 @@ const applicationRoutes = require('./routes/applicationRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const { globalErrorHandler } = require('./src/middleware/errorMiddleware');
 const { xssProtection, secureHeaders, rateLimiter } = require('./middleware/securityMiddleware');
+const setupSwagger = require('./swagger');
 
 
 // 환경 변수 로드
@@ -37,6 +38,9 @@ app.use(express.json());
 app.use(secureHeaders);
 app.use(xssProtection);
 app.use(rateLimiter);
+
+// Swagger 설정 추가
+setupSwagger(app);
 
 // 기본 라우트
 app.get('/', (req, res) => {
