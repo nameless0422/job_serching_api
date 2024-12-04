@@ -1,5 +1,5 @@
 const connectDB = require('./database');
-const Job = require('./Jobs');
+const Job = require('../api/models/Jobs');
 const crawlSaramin = require('./scraper');
 
 const main = async () => {

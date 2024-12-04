@@ -1,6 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const Job = require('./Jobs');
+const Job = require('../api/models/Jobs');
 
 const crawlSaramin = async (keyword, pages = 1) => {
     const jobs = [];
