@@ -5,7 +5,7 @@
  *   description: User authentication and authorization
  */
 const express = require('express');
-const { register, login, refreshToken } = require('../controllers/authController');
+const { register, login, refreshToken, getProfile, deleteProfile } = require('../controllers/authController');
 const { authenticate } = require('../middleware/authMiddleware');
 
 const router = express.Router();
