@@ -3,6 +3,7 @@
 사람인 크롤링
 CRUD 지원
 
+```
 JOB_SEARCHING_API/
 ├── node_modules/             
 ├── src/                      
@@ -38,3 +39,4 @@ JOB_SEARCHING_API/
 ├── package.json              
 ├── package-lock.json         
 └── README.md                 
+```
