@@ -8,7 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
-const { globalErrorHandler } = require('./middleware/errorMiddleware');
+const { globalErrorHandler } = require('./src/middleware/errorMiddleware');
 const { xssProtection, secureHeaders, rateLimiter } = require('./middleware/securityMiddleware');
 
 
