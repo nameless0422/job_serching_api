@@ -9,6 +9,8 @@ const jobRoutes = require('./routes/jobRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const { globalErrorHandler } = require('./middleware/errorMiddleware');
+const { xssProtection, secureHeaders, rateLimiter } = require('./middleware/securityMiddleware');
+
 
 // 환경 변수 로드
 dotenv.config();
@@ -30,6 +32,11 @@ app.use(cors());
 
 // 요청 본문 JSON 파싱
 app.use(express.json());
+
+// 보안 미들웨어
+app.use(secureHeaders);
+app.use(xssProtection);
+app.use(rateLimiter);
 
 // 기본 라우트
 app.get('/', (req, res) => {
