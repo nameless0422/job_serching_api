@@ -1,4 +1,4 @@
-const Job = require('../models/Job');
+const Job = require('../models/Jobs');
 
 // 공고 목록 조회
 exports.getJobs = async (req, res) => {

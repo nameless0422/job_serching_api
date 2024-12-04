@@ -90,3 +90,57 @@ exports.logout = async (req, res) => {
         res.status(500).json({ status: 'error', message: err.message });
     }
 };
+// 회원 정보 조회
+exports.getProfile = async (req, res) => {
+    try {
+        const user = req.user; // 인증 미들웨어에서 가져온 사용자 정보
+
+        if (!user) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'User not found',
+            });
+        }
+
+        res.json({
+            status: 'success',
+            data: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                createdAt: user.createdAt,
+            },
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 'error',
+            message: err.message,
+        });
+    }
+};
+// 회원 탈퇴
+exports.deleteProfile = async (req, res) => {
+    try {
+        const user = req.user; // 인증 미들웨어에서 가져온 사용자 정보
+
+        if (!user) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'User not found',
+            });
+        }
+
+        // 사용자 계정 삭제
+        await user.deleteOne();
+
+        res.json({
+            status: 'success',
+            message: 'User account deleted successfully',
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 'error',
+            message: err.message,
+        });
+    }
+};

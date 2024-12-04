@@ -4,12 +4,12 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const connectDB = require('./database');
-const authRoutes = require('./routes/authRoutes');
-const jobRoutes = require('./routes/jobRoutes');
-const applicationRoutes = require('./routes/applicationRoutes');
-const bookmarkRoutes = require('./routes/bookmarkRoutes');
+const authRoutes = require('./src/routes/authRoutes');
+const jobRoutes = require('./src/routes/jobRoutes');
+const applicationRoutes = require('./src/routes/applicationRoutes');
+const bookmarkRoutes = require('./src/routes/bookmarkRoutes');
 const { globalErrorHandler } = require('./src/middleware/errorMiddleware');
-const { xssProtection, secureHeaders, rateLimiter } = require('./middleware/securityMiddleware');
+const { xssProtection, secureHeaders, rateLimiter } = require('./src/middleware/sercurityMiddleware');
 const setupSwagger = require('./swagger');
 
 
