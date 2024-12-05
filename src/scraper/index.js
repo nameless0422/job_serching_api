@@ -1,5 +1,5 @@
-const connectDB = require('./database');
-const Job = require('../api/models/Jobs');
+const connectDB = require('../../database');
+const Job = require('../../src/models/Jobs');
 const crawlSaramin = require('./scraper');
 
 const main = async () => {
@@ -7,7 +7,7 @@ const main = async () => {
 
     try {
         const keyword = 'python';
-        const pages = 2;
+        const pages = 5;
 
         console.log(`Starting to crawl ${pages} pages for keyword: ${keyword}`);
         const jobs = await crawlSaramin(keyword, pages);

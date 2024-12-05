@@ -22,19 +22,21 @@ connectDB();
 // Express 앱 생성
 const app = express();
 
-// 보안 미들웨어
-app.use(helmet());
-
 // 요청 로그 미들웨어
 app.use(morgan('dev'));
 
 // CORS 허용
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type,Authorization',
+}));
 
 // 요청 본문 JSON 파싱
 app.use(express.json());
 
 // 보안 미들웨어
+app.use(helmet());
 app.use(secureHeaders);
 app.use(xssProtection);
 app.use(rateLimiter);

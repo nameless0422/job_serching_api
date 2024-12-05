@@ -1,3 +1,4 @@
 /node_modules
 jobs.db
 .env
+/openssl-1.1.1w
