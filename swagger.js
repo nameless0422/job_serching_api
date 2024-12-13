@@ -3,7 +3,7 @@ const swaggerUi = require('swagger-ui-express');
 
 const options = {
     definition: {
-        openapi: '3.0.0',
+        openapi: '3.0.1',
         info: {
             title: 'Job Management API',
             version: '1.0.0',
