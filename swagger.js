@@ -12,7 +12,7 @@ const options = {
         servers: [
             {
                 url: 'https://cjinyeong.duckdns.org:13030',
-                description: 'Development server',
+                description: 'server',
             },
         ],
         components: {

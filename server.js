@@ -15,5 +15,5 @@ const PORT = process.env.PORT || 3000;
 
 // Start HTTPS server
 https.createServer(sslOptions, app).listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on https://localhost:${PORT}`);
+    console.log(`Server running on https://cjinyeong.duckdns.org:13030`);
 });
