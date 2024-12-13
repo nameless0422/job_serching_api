@@ -11,7 +11,7 @@ const options = {
         },
         servers: [
             {
-                url: 'https://localhost:3000',
+                url: 'https://cjinyeong.duckdns.org:13030',
                 description: 'Development server',
             },
         ],
