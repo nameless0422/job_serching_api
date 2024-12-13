@@ -26,11 +26,7 @@ const app = express();
 app.use(morgan('dev'));
 
 // CORS 허용
-app.use(cors({
-    origin: '*',
-    methods: 'GET,POST,PUT,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type,Authorization',
-}));
+app.use(cors());
 
 // 요청 본문 JSON 파싱
 app.use(express.json());
