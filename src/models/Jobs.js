@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
-const JobSchema = new mongoose.Schema({
-    company: String,
-    title: String,
-    link: String,
-    location: String,
-    experience: String,
-    education: String,
-    employmentType: String,
-    deadline: String,
-    sector: String,
-    salary: String,
+const jobSchema = new mongoose.Schema({
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true }, // Company와의 참조
+    title: { type: String, required: true },
+    link: { type: String, required: true },
+    location: { type: String },
+    experience: { type: String },
+    education: { type: String },
+    employmentType: { type: String },
+    deadline: { type: String },
+    sector: { type: String },
+    salary: { type: String },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Job', JobSchema);
+module.exports = mongoose.model('Job', jobSchema);

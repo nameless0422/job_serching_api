@@ -1,17 +1,23 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const Company = require('../../src/models/Company');
 const Job = require('../../src/models/Jobs');
 
+const API_KEY = 'af458bb2ecf07119c202b5e88f5c4366'; // ScraperAPI API Key
+
 const crawlSaramin = async (keyword, pages = 1) => {
-    const jobs = [];
     const headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     };
 
+    const jobs = []; // 크롤링한 데이터를 저장할 배열
+
     for (let page = 1; page <= pages; page++) {
-        const url = `https://www.saramin.co.kr/zf_user/search/recruit?searchType=search&searchword=${encodeURIComponent(
+        const targetUrl = `https://www.saramin.co.kr/zf_user/search/recruit?searchType=search&searchword=${encodeURIComponent(
             keyword
         )}&recruitPage=${page}`;
+
+        const url = `https://api.scraperapi.com?api_key=${API_KEY}&url=${encodeURIComponent(targetUrl)}`;
 
         try {
             const { data } = await axios.get(url, { headers });
@@ -19,7 +25,7 @@ const crawlSaramin = async (keyword, pages = 1) => {
 
             $('.item_recruit').each((_, element) => {
                 try {
-                    const company = $(element).find('.corp_name a').text().trim();
+                    const companyName = $(element).find('.corp_name a').text().trim();
                     const title = $(element).find('.job_tit a').text().trim();
                     const link = `https://www.saramin.co.kr${$(element).find('.job_tit a').attr('href')}`;
                     const conditions = $(element).find('.job_condition span');
@@ -32,7 +38,7 @@ const crawlSaramin = async (keyword, pages = 1) => {
                     const salary = $(element).find('.area_badge .badge').text().trim() || '';
 
                     jobs.push({
-                        company,
+                        companyName, // 회사 이름만 저장
                         title,
                         link,
                         location,
@@ -50,10 +56,45 @@ const crawlSaramin = async (keyword, pages = 1) => {
 
             console.log(`Page ${page} crawled successfully.`);
         } catch (err) {
-            console.error('Error fetching page:', err.message);
+            console.error(`Error fetching page ${page}:`, err.message);
         }
     }
 
+    console.log('Saving jobs to MongoDB...');
+
+    // MongoDB에 저장
+    for (const job of jobs) {
+        try {
+            // 회사 정보 저장
+            const company = await Company.findOneAndUpdate(
+                { name: job.companyName }, // 회사 이름으로 찾기
+                {
+                    $set: {
+                        name: job.companyName,
+                        location: job.location, // 회사 위치
+                        description: job.sector || 'No description provided', // 부서 정보
+                    },
+                },
+                { upsert: true, new: true } // 없으면 새로 생성
+            );
+
+            // 채용 공고 저장
+            await Job.updateOne(
+                { title: job.title, company: company._id }, // 제목과 회사 ID로 중복 방지
+                {
+                    $set: {
+                        ...job,
+                        company: company._id, // 회사 ObjectId 참조
+                    },
+                },
+                { upsert: true } // 없으면 새로 생성
+            );
+        } catch (err) {
+            console.error(`Error saving job "${job.title}":`, err.message);
+        }
+    }
+
+    console.log('Jobs saved successfully.');
     return jobs;
 };
 
