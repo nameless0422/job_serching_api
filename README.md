@@ -2,7 +2,7 @@
 
 A Node.js-based RESTful API for managing job postings, user authentication, applications, and bookmarks, with web scraping, validation, and advanced features.
 
-## Ὂ1 Features
+## Features
 
 ### Core Features
 - **User Authentication**
