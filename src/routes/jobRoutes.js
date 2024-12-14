@@ -63,7 +63,7 @@ const cacheMiddleware = require('../middleware/cacheMiddleware'); // 캐싱 미�
  */
 
 // Aggregate job statistics
-router.get('/stats', authenticate, cacheMiddleware, jobController.getJobStats);
+router.get('/stats', cacheMiddleware, jobController.getJobStats);
 
 /**
  * @swagger
