@@ -3,7 +3,9 @@ const cheerio = require('cheerio');
 const Company = require('../../src/models/Company');
 const Job = require('../../src/models/Jobs');
 
-const API_KEY = 'af458bb2ecf07119c202b5e88f5c4366'; // ScraperAPI API Key
+require('dotenv').config(); // .env 파일 로드
+
+const API_KEY = process.env.SCRAPER_API_KEY; // .env 파일에서 API Key 가져오기
 
 const crawlSaramin = async (keyword, pages = 1) => {
     const headers = {
