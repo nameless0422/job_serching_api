@@ -133,7 +133,7 @@ exports.getJobStats = async (req, res) => {
             { $match: matchStage }, // 필터 조건 적용
             {
                 $group: {
-                    _id: `$${groupBy}`, // groupBy 기준으로 그룹화
+                    _id: { $toString: `$${groupBy}` }, // groupBy 필드를 문자열로 변환
                     count: { $sum: 1 }, // 그룹 내 문서 수 집계
                 },
             },
