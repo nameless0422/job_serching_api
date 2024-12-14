@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
-const authenticate = require('../middleware/authMiddleware'); // 인증 미들웨어
+const { authenticate } = require('../middleware/authMiddleware'); // 인증 미들웨어
 
 /**
  * @swagger
