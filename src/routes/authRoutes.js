@@ -6,7 +6,9 @@
  */
 const express = require('express');
 const { register, login, refreshToken, getProfile, deleteProfile } = require('../controllers/authController');
+const validate = require('../middleware/validationMiddleware');
 const { authenticate } = require('../middleware/authMiddleware');
+const { registerSchema, loginSchema, refreshTokenSchema, profileSchema } = require('../schemas/authSchemas');
 
 const router = express.Router();
 
@@ -36,7 +38,7 @@ const router = express.Router();
  *         description: Email already exists
  */
 // 회원 가입
-router.post('/register', register);
+router.post('/register', validate(registerSchema), register);
 
 /**
  * @swagger
@@ -62,7 +64,7 @@ router.post('/register', register);
  *         description: Invalid email or password
  */
 // 로그인
-router.post('/login', login);
+router.post('/login', validate(loginSchema), login);
 
 /**
  * @swagger
@@ -86,7 +88,7 @@ router.post('/login', login);
  *         description: Invalid or expired refresh token
  */
 // 토큰 갱신
-router.post('/refresh', refreshToken);
+router.post('/refresh', validate(refreshTokenSchema), refreshToken);
 
 /**
  * @swagger
@@ -118,7 +120,7 @@ router.post('/refresh', refreshToken);
  *         description: Internal server error
  */
 // 프로필 수정 (인증 필요)
-router.put('/profile', authenticate, async (req, res) => {
+router.put('/profile', authenticate, validate(profileSchema), async (req, res) => {
     try {
         const { name, password } = req.body;
         const user = req.user;
@@ -133,7 +135,6 @@ router.put('/profile', authenticate, async (req, res) => {
         res.status(500).json({ status: 'error', message: err.message });
     }
 });
-
 
 /**
  * @swagger
@@ -168,6 +169,5 @@ router.get('/profile', authenticate, getProfile);
  */
 // 회원 탈퇴 (인증 필요)
 router.delete('/profile', authenticate, deleteProfile);
-
 
 module.exports = router;

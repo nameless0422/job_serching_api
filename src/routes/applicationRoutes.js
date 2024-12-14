@@ -8,9 +8,10 @@ const express = require('express');
 const { applyJob, getApplications, cancelApplication } = require('../controllers/applicationController');
 const { authenticate } = require('../middleware/authMiddleware');
 const cacheMiddleware = require('../middleware/cacheMiddleware');
+const validate = require('../middleware/validationMiddleware');
+const { applicationSchema } = require('../schemas/applicationSchemas'); // Validation schema
 
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -38,8 +39,7 @@ const router = express.Router();
  *         description: Already applied for the job
  */
 // 지원하기
-router.post('/', authenticate, applyJob);
-
+router.post('/', authenticate, validate(applicationSchema), applyJob);
 
 /**
  * @swagger
@@ -114,8 +114,8 @@ router.post('/', authenticate, applyJob);
  *                   jobId:
  *                     _id: "675cc180a59ec8122a6ef03a"
  *                     company: "675cc180a59ec8122a6ef038"
- *                     title: "(주)디지키 Python 데이터 처리 및 분석 프로그램 개발자 모집"
- *                     location: "경기  안양시 만안구"
+ *                     title: "(\uc8fc)\ub514\uc9c0\ud0a4 Python \ub370\uc774\ud130 \ucc98\ub9ac \ubc0f \ubc18\uc751 \ud504\ub9ac\uadf8\ub7a8 \uac1c\ubc1c\uc790 \ubaa9\uc9d1"
+ *                     location: "\uacbd\uae30  \uc548\uc591\uc2dc \ub9e4\uc548\uad70"
  *                   resume: "test"
  *                   status: "applied"
  *                   createdAt: "2024-12-14T21:37:38.285Z"
@@ -128,7 +128,6 @@ router.post('/', authenticate, applyJob);
  */
 // 지원 내역 조회
 router.get('/', cacheMiddleware, authenticate, getApplications);
-
 
 /**
  * @swagger
