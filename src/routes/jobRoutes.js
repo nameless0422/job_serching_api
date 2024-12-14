@@ -1,37 +1,68 @@
+const express = require('express');
+const router = express.Router();
+const jobController = require('../controllers/jobController');
+const authenticate = require('../middleware/authMiddleware'); // 인증 미들웨어
+
 /**
  * @swagger
  * tags:
  *   name: Jobs
- *   description: Manage job postings
+ *   description: API for managing job postings
  */
-
-const express = require('express');
-const { getJobs, getJobById } = require('../controllers/jobController');
-const router = express.Router();
 
 /**
  * @swagger
  * /jobs:
  *   get:
- *     summary: Get a list of job postings
+ *     summary: Retrieve a list of jobs with search, filtering, sorting, and pagination
  *     tags: [Jobs]
  *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Keyword to search job titles
+ *       - in: query
+ *         name: location
+ *         schema:
+ *           type: string
+ *         description: Filter by job location
+ *       - in: query
+ *         name: experience
+ *         schema:
+ *           type: string
+ *         description: Filter by required experience level
+ *       - in: query
+ *         name: education
+ *         schema:
+ *           type: string
+ *         description: Filter by required education level
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Field to sort by (e.g., "title", "-deadline")
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
  *     responses:
  *       200:
- *         description: Job postings retrieved successfully
+ *         description: A list of jobs
  */
-router.get('/', getJobs);
+router.get('/', jobController.getAllJobs);
 
 /**
  * @swagger
  * /jobs/{id}:
  *   get:
- *     summary: Get job details
+ *     summary: Retrieve job details by ID
  *     tags: [Jobs]
  *     parameters:
  *       - in: path
@@ -43,9 +74,114 @@ router.get('/', getJobs);
  *     responses:
  *       200:
  *         description: Job details retrieved successfully
- *       404:
- *         description: Job not found
  */
-router.get('/:id', getJobById);
+router.get('/:id', jobController.getJobById);
+
+/**
+ * @swagger
+ * /jobs:
+ *   post:
+ *     summary: Create a new job posting
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               experience:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               employmentType:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *                 format: date
+ *               sector:
+ *                 type: string
+ *               salary:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Job created successfully
+ */
+router.post('/', authenticate, jobController.createJob);
+
+/**
+ * @swagger
+ * /jobs/{id}:
+ *   put:
+ *     summary: Update a job posting
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Job ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               experience:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               employmentType:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *               sector:
+ *                 type: string
+ *               salary:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Job updated successfully
+ */
+router.put('/:id', authenticate, jobController.updateJob);
+
+/**
+ * @swagger
+ * /jobs/{id}:
+ *   delete:
+ *     summary: Delete a job posting
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Job ID
+ *     responses:
+ *       200:
+ *         description: Job deleted successfully
+ */
+router.delete('/:id', authenticate, jobController.deleteJob);
 
 module.exports = router;
