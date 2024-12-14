@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
 const { authenticate } = require('../middleware/authMiddleware'); // 인증 미들웨어
+const cacheMiddleware = require('../middleware/cacheMiddleware'); // 캐싱 미들웨어
 
 /**
  * @swagger
@@ -62,7 +63,7 @@ const { authenticate } = require('../middleware/authMiddleware'); // 인증 미�
  */
 
 // Aggregate job statistics
-router.get('/stats', authenticate, jobController.getJobStats);
+router.get('/stats', authenticate, cacheMiddleware, jobController.getJobStats);
 
 /**
  * @swagger
@@ -109,8 +110,14 @@ router.get('/stats', authenticate, jobController.getJobStats);
  *     responses:
  *       200:
  *         description: A list of jobs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Job'
  */
-router.get('/', jobController.getAllJobs);
+router.get('/', cacheMiddleware, jobController.getAllJobs);
 
 /**
  * @swagger
@@ -128,6 +135,10 @@ router.get('/', jobController.getAllJobs);
  *     responses:
  *       200:
  *         description: Job details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Job'
  */
 router.get('/:id', jobController.getJobById);
 
@@ -144,27 +155,7 @@ router.get('/:id', jobController.getJobById);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               company:
- *                 type: string
- *               location:
- *                 type: string
- *               experience:
- *                 type: string
- *               education:
- *                 type: string
- *               employmentType:
- *                 type: string
- *               deadline:
- *                 type: string
- *                 format: date
- *               sector:
- *                 type: string
- *               salary:
- *                 type: string
+ *             $ref: '#/components/schemas/Job'
  *     responses:
  *       201:
  *         description: Job created successfully
@@ -191,26 +182,7 @@ router.post('/', authenticate, jobController.createJob);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               company:
- *                 type: string
- *               location:
- *                 type: string
- *               experience:
- *                 type: string
- *               education:
- *                 type: string
- *               employmentType:
- *                 type: string
- *               deadline:
- *                 type: string
- *               sector:
- *                 type: string
- *               salary:
- *                 type: string
+ *             $ref: '#/components/schemas/Job'
  *     responses:
  *       200:
  *         description: Job updated successfully
