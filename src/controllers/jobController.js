@@ -178,3 +178,37 @@ exports.getJobStats = async (req, res) => {
         });
     }
 };
+
+
+/**
+ * Get recommended jobs based on a given job ID
+ */
+exports.getRecommendedJobs = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+
+        // Find the job by ID
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ status: 'error', message: 'Job not found' });
+        }
+
+        // Create a query for similar jobs
+        const recommendations = await Job.find({
+            $or: [
+                { location: job.location },
+                { sector: job.sector },
+                { company: job.company },
+            ],
+            _id: { $ne: jobId }, // Exclude the original job
+        })
+            .limit(5); // Limit to 5 recommendations
+
+        res.status(200).json({
+            status: 'success',
+            data: recommendations,
+        });
+    } catch (err) {
+        res.status(500).json({ status: 'error', message: err.message });
+    }
+};

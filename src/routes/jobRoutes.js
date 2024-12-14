@@ -287,4 +287,58 @@ router.put('/:id', authenticate, validate(jobSchema), jobController.updateJob);
  */
 router.delete('/:id', authenticate, jobController.deleteJob);
 
+/**
+ * @swagger
+ * /jobs/recommend/{id}:
+ *   get:
+ *     summary: Retrieve recommended jobs based on a given job ID
+ *     tags: [Jobs]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Job ID to find recommendations for
+ *     responses:
+ *       200:
+ *         description: Recommended jobs retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       title:
+ *                         type: string
+ *                       company:
+ *                         type: string
+ *                       location:
+ *                         type: string
+ *             examples:
+ *               example-1:
+ *                 value:
+ *                   status: success
+ *                   data:
+ *                     - _id: "675cc180a59ec8122a6ef03a"
+ *                       title: "Python Developer Position"
+ *                       company: "ABC Corp"
+ *                       location: "Seoul"
+ *                     - _id: "675cc180a59ec8122a6ef03b"
+ *                       title: "Backend Engineer"
+ *                       company: "ABC Corp"
+ *                       location: "Seoul"
+ */
+router.get('/recommend/:id', jobController.getRecommendedJobs);
+
+
 module.exports = router;
