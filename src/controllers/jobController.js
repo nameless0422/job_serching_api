@@ -141,8 +141,6 @@ exports.getJobStats = async (req, res) => {
             { $sort: { count: -1 } },
         ];
 
-        console.log('Pipeline:', JSON.stringify(pipeline, null, 2));
-
         // Aggregate 실행
         const stats = await Job.aggregate(pipeline);
 
