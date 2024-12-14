@@ -184,4 +184,57 @@ router.put('/:id', authenticate, jobController.updateJob);
  */
 router.delete('/:id', authenticate, jobController.deleteJob);
 
+/**
+ * @swagger
+ * /jobs/stats:
+ *   get:
+ *     summary: Get aggregated job statistics
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: groupBy
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [company, location, experience]
+ *         description: The field to group by
+ *       - in: query
+ *         name: filter
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: '{"location":"서울"}'
+ *         description: JSON string for filtering data
+ *     responses:
+ *       200:
+ *         description: Aggregated statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: Grouped field value
+ *                       count:
+ *                         type: integer
+ *                         description: Count of jobs in this group
+ *       400:
+ *         description: Missing or invalid query parameters
+ *       500:
+ *         description: Internal server error
+ */
+// Aggregate job statistics
+router.get('/stats', authenticate, jobController.getJobStats);
+
 module.exports = router;

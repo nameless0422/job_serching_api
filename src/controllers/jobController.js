@@ -89,3 +89,53 @@ exports.getJobById = async (req, res) => {
         res.status(500).json({ status: 'error', message: err.message });
     }
 };
+
+/**
+ * Get aggregated job statistics
+ */
+exports.getJobStats = async (req, res) => {
+    try {
+        const { groupBy, filter } = req.query;
+
+        if (!groupBy) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Missing required query parameter: groupBy',
+            });
+        }
+
+        // Build the match stage for filtering
+        const matchStage = {};
+        if (filter) {
+            const filters = JSON.parse(filter); // Example: filter={"location":"서울"}
+            for (const key in filters) {
+                matchStage[key] = filters[key];
+            }
+        }
+
+        // Group stage for aggregation
+        const groupStage = {
+            _id: `$${groupBy}`,
+            count: { $sum: 1 }, // Count number of documents per group
+        };
+
+        // Aggregate pipeline
+        const pipeline = [
+            { $match: matchStage }, // Apply filtering
+            { $group: groupStage }, // Apply grouping
+            { $sort: { count: -1 } }, // Sort by count in descending order
+        ];
+
+        const stats = await Job.aggregate(pipeline);
+
+        res.status(200).json({
+            status: 'success',
+            data: stats,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to retrieve job statistics',
+        });
+    }
+};
