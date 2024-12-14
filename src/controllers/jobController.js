@@ -112,7 +112,12 @@ exports.getJobStats = async (req, res) => {
             try {
                 const filters = JSON.parse(filter); // JSON 파싱
                 for (const key in filters) {
-                    matchStage[key] = filters[key];
+                    if (typeof filters[key] === 'string') {
+                        // 문자열 필터에 정규식 적용
+                        matchStage[key] = { $regex: filters[key], $options: "i" };
+                    } else {
+                        matchStage[key] = filters[key];
+                    }
                 }
             } catch (err) {
                 console.error('Invalid filter format:', err.message);
