@@ -208,8 +208,35 @@ router.post('/', authenticate, validate(jobSchema), jobController.createJob);
  *                   employmentType: "계약직"
  *                   salary: "급성장중"
  *                   sector: "Python, 알고리즘, Pandas, 솔루션업체, 소프트웨어개발"
+ *       404:
+ *         description: Job not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Job not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
  */
 router.get('/:id', jobController.getJobById);
+
 
 /**
  * @swagger

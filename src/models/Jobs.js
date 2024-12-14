@@ -11,6 +11,7 @@ const jobSchema = new mongoose.Schema({
     deadline: { type: String },
     sector: { type: String },
     salary: { type: String },
+    views: { type: Number, default: 0 },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Job', jobSchema);
