@@ -98,7 +98,7 @@ exports.getJobStats = async (req, res) => {
         const { groupBy, filter } = req.query;
 
         // 유효한 groupBy 값 확인
-        const validGroupByFields = ['company', 'location', 'experience', 'employmentType'];
+        const validGroupByFields = ['company', 'location', 'experience', 'employmentType', 'sector'];
         if (!groupBy || !validGroupByFields.includes(groupBy)) {
             return res.status(400).json({
                 status: 'error',
@@ -115,6 +115,7 @@ exports.getJobStats = async (req, res) => {
                     matchStage[key] = filters[key];
                 }
             } catch (err) {
+                console.error('Invalid filter format:', err.message);
                 return res.status(400).json({
                     status: 'error',
                     message: 'Invalid filter format. Use a valid JSON string.',
@@ -134,13 +135,24 @@ exports.getJobStats = async (req, res) => {
             { $sort: { count: -1 } }, // 카운트 기준 내림차순 정렬
         ];
 
+        console.log('Aggregation pipeline:', JSON.stringify(pipeline, null, 2));
+
+        // Aggregate 실행
         const stats = await Job.aggregate(pipeline);
+
+        if (stats.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No data found for the given criteria.',
+            });
+        }
 
         res.status(200).json({
             status: 'success',
             data: stats,
         });
     } catch (err) {
+        console.error('Error during aggregation:', err);
         res.status(500).json({
             status: 'error',
             message: `Failed to retrieve job statistics: ${err.message}`,

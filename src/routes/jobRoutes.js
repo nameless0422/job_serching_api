@@ -198,7 +198,7 @@ router.delete('/:id', authenticate, jobController.deleteJob);
  *         required: true
  *         schema:
  *           type: string
- *           enum: [company, location, experience, employmentType]
+ *           enum: [company, location, experience, employmentType, sector]
  *         description: The field to group by
  *       - in: query
  *         name: filter
@@ -234,6 +234,7 @@ router.delete('/:id', authenticate, jobController.deleteJob);
  *       500:
  *         description: Internal server error
  */
+
 // Aggregate job statistics
 router.get('/stats', authenticate, jobController.getJobStats);
 
