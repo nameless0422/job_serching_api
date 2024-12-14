@@ -121,7 +121,7 @@ JOB_SEARCHING_API/
 - API Documentation: Swagger
 
 ## 📋 Usage
-1. Access Swagger documentation: `http://localhost:3000/api-docs`
+1. Access Swagger documentation: `https://cjinyeong.duckdns.org:13030/api-docs/`
 2. Use Postman to test endpoints
 3. Check console logs for server activity
 
