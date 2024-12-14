@@ -97,33 +97,41 @@ exports.getJobStats = async (req, res) => {
     try {
         const { groupBy, filter } = req.query;
 
-        if (!groupBy) {
+        // 유효한 groupBy 값 확인
+        const validGroupByFields = ['company', 'location', 'experience', 'employmentType'];
+        if (!groupBy || !validGroupByFields.includes(groupBy)) {
             return res.status(400).json({
                 status: 'error',
-                message: 'Missing required query parameter: groupBy',
+                message: `Invalid groupBy value. Allowed values are: ${validGroupByFields.join(', ')}`,
             });
         }
 
-        // Build the match stage for filtering
+        // 필터 조건 생성
         const matchStage = {};
         if (filter) {
-            const filters = JSON.parse(filter); // Example: filter={"location":"서울"}
-            for (const key in filters) {
-                matchStage[key] = filters[key];
+            try {
+                const filters = JSON.parse(filter); // JSON 파싱
+                for (const key in filters) {
+                    matchStage[key] = filters[key];
+                }
+            } catch (err) {
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'Invalid filter format. Use a valid JSON string.',
+                });
             }
         }
 
-        // Group stage for aggregation
-        const groupStage = {
-            _id: `$${groupBy}`,
-            count: { $sum: 1 }, // Count number of documents per group
-        };
-
-        // Aggregate pipeline
+        // MongoDB Aggregation Pipeline 생성
         const pipeline = [
-            { $match: matchStage }, // Apply filtering
-            { $group: groupStage }, // Apply grouping
-            { $sort: { count: -1 } }, // Sort by count in descending order
+            { $match: matchStage }, // 필터 조건 적용
+            {
+                $group: {
+                    _id: `$${groupBy}`, // groupBy 기준으로 그룹화
+                    count: { $sum: 1 }, // 그룹 내 문서 수 집계
+                },
+            },
+            { $sort: { count: -1 } }, // 카운트 기준 내림차순 정렬
         ];
 
         const stats = await Job.aggregate(pipeline);
@@ -135,7 +143,7 @@ exports.getJobStats = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             status: 'error',
-            message: 'Failed to retrieve job statistics',
+            message: `Failed to retrieve job statistics: ${err.message}`,
         });
     }
 };

@@ -198,7 +198,7 @@ router.delete('/:id', authenticate, jobController.deleteJob);
  *         required: true
  *         schema:
  *           type: string
- *           enum: [company, location, experience]
+ *           enum: [company, location, experience, employmentType]
  *         description: The field to group by
  *       - in: query
  *         name: filter
