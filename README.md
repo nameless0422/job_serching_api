@@ -171,7 +171,7 @@ JOB_SEARCHING_API/
 ## 📋 Usage
 
 1. **Access Swagger Documentation:**
-   - Visit: `https://cjinyeong.duckdns.org:13030/api-docs/`
+   - Visit: [https://cjinyeong.duckdns.org:13030/api-docs/](https://cjinyeong.duckdns.org:13030/api-docs/)
             `https://<your-domain>/api-docs/`
    - Interactive testing and API documentation.
 
