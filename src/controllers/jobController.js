@@ -113,7 +113,6 @@ exports.getJobStats = async (req, res) => {
                 const filters = JSON.parse(filter); // JSON 파싱
                 for (const key in filters) {
                     if (typeof filters[key] === 'string') {
-                        // 문자열 필터에 정규식 적용
                         matchStage[key] = { $regex: filters[key], $options: "i" };
                     } else {
                         matchStage[key] = filters[key];
@@ -130,17 +129,19 @@ exports.getJobStats = async (req, res) => {
 
         // MongoDB Aggregation Pipeline 생성
         const pipeline = [
-            { $match: matchStage }, // 필터 조건 적용
+            { $match: matchStage },
             {
                 $group: {
-                    _id: { $toString: `$${groupBy}` }, // groupBy 필드를 문자열로 변환
-                    count: { $sum: 1 }, // 그룹 내 문서 수 집계
+                    _id: {
+                        $ifNull: [{ $toString: `$${groupBy}` }, "Unknown"], // null 방지
+                    },
+                    count: { $sum: 1 },
                 },
             },
-            { $sort: { count: -1 } }, // 카운트 기준 내림차순 정렬
+            { $sort: { count: -1 } },
         ];
 
-        console.log('Aggregation pipeline:', JSON.stringify(pipeline, null, 2));
+        console.log('Pipeline:', JSON.stringify(pipeline, null, 2));
 
         // Aggregate 실행
         const stats = await Job.aggregate(pipeline);
