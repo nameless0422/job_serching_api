@@ -1,171 +1,190 @@
 # Job Searching API
 
-A Node.js-based RESTful API for managing job postings, user authentication, applications, and bookmarks, with web scraping functionality.
+A Node.js-based RESTful API for managing job postings, user authentication, applications, and bookmarks, with web scraping, validation, and advanced features.
 
-## 💡 Features
+## Ὂ1 Features
 
+### Core Features
 - **User Authentication**
-  - User registration and login
-  - JWT-based token management
-  - Secure password encryption
+  - Secure registration, login, and profile management
+  - JWT-based token authentication with refresh token support
+  - Password encryption using `bcrypt`
 
 - **Job Management**
   - CRUD operations for job postings
-  - Pagination, filtering, and sorting
+  - Advanced features: pagination, filtering, sorting, and aggregation
 
 - **Applications Management**
-  - Submit and manage job applications
-  - View and cancel applications
+  - Submit, view, and cancel job applications
+  - Status tracking and history retrieval
 
 - **Bookmark Management**
   - Add/remove job bookmarks
   - Retrieve saved bookmarks
 
+### Supporting Features
 - **Web Scraping**
-  - Scrape job data from external websites
-  - Store scraped data in MongoDB
+  - Scrapes job data from external websites using `axios`, `cheerio`, and ScraperAPI
+  - Stores scraped data in MongoDB
+  - Supports proxy integration for enhanced scraping capabilities
 
-## 📦 Installation
+- **Validation & Security**
+  - Comprehensive request validation using Joi
+  - Authentication and authorization middleware for secure access
+  - Input sanitization and validation for all API endpoints
 
-### 1. **Set Up the Server Environment**
+- **Performance Optimizations**
+  - Response caching using Redis
+  - Rate limiting for APIs to prevent abuse
 
-On an Ubuntu server, ensure you have the following dependencies installed:
+- **API Documentation**
+  - Fully documented API using Swagger
+  - Interactive testing via Swagger UI
 
-#### Install Node.js
-```bash
-sudo apt update
-sudo apt install -y nodejs npm
-node -v # Verify Node.js version
-npm -v  # Verify npm version
-```
+## 🛠️ Installation
 
-#### Install MongoDB
-```bash
-sudo apt install -y mongodb
-sudo systemctl start mongodb
-sudo systemctl enable mongodb
-mongo --eval 'db.runCommand({ connectionStatus: 1 })' # Verify MongoDB installation
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/JOB_SEARCHING_API.git
+   cd JOB_SEARCHING_API
+   ```
 
-#### Install Redis
-```bash
-sudo apt install -y redis-server
-sudo systemctl start redis
-sudo systemctl enable redis
-redis-cli ping # Verify Redis installation
-```
+2. **Ubuntu Server Setup & Install dependencies:**
+  1. Install Node.js and npm:
+     ```bash
+     sudo apt update
+     sudo apt install nodejs npm
+     npm install
+     ```
+  2. Install MongoDB:
+     ```bash
+     sudo apt install mongodb
+     ```
+  3. Install Redis:
+     ```bash
+     sudo apt install redis
+     ```
+  4. Install Certbot (for SSL):
+     ```bash
+     sudo apt install certbot python3-certbot-nginx
+     ```
 
-#### Install Certbot (for SSL certificates)
-```bash
-sudo apt install -y certbot python3-certbot-nginx
-```
+3. **Set up environment variables:**
+   Create a `.env` file with the following configurations:
+   ```
+   PORT=3000
+   MONGO_URI=mongodb://localhost:27017/job_searching_api
+   JWT_SECRET=your_jwt_secret
+   JWT_REFRESH_SECRET=your_jwt_refresh_secret
+   SCRAPER_API_KEY=your_scraper_api_key
+   ```
 
-### 2. **Clone the Repository**
-```bash
-git clone https://github.com/your-username/JOB_SEARCHING_API.git
-cd JOB_SEARCHING_API
-```
-
-### 3. **Install Dependencies**
-```bash
-npm install
-```
-
-### 4. **Create a `.env` File**
-
-Create a `.env` file in the root directory with the following configurations:
-```env
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/job_searching_api
-JWT_SECRET=your_jwt_secret
-JWT_REFRESH_SECRET=your_jwt_refresh_secret
-REDIS_URL=redis://localhost:6379
-```
-
-### 5. **Run the Server**
-```bash
-node server.js
-```
+4. **Run the server:**
+   ```bash
+   node server.js
+   ```
 
 ## 📋 API Endpoints
 
-### Authentication
+### Authentication (`/auth`)
 - `POST /auth/register`: Register a new user
 - `POST /auth/login`: User login
 - `POST /auth/refresh`: Refresh access token
-- `PUT /auth/profile`: Update user profile (authentication required)
 - `GET /auth/profile`: Retrieve user profile (authentication required)
+- `PUT /auth/profile`: Update user profile (authentication required)
 - `DELETE /auth/profile`: Delete user account (authentication required)
 
-### Job Postings
-- `GET /jobs`: List job postings with pagination
+### Job Postings (`/jobs`)
+- `GET /jobs`: List jobs with pagination, filtering, and sorting
+- `GET /jobs/stats`: Retrieve aggregated job statistics
 - `GET /jobs/:id`: Retrieve specific job details
 - `POST /jobs`: Create a new job posting (authentication required)
 - `PUT /jobs/:id`: Update a job posting (authentication required)
 - `DELETE /jobs/:id`: Delete a job posting (authentication required)
-- `GET /jobs/stats`: Get aggregated job statistics
 
-### Applications
+### Applications (`/applications`)
 - `POST /applications`: Submit a job application (authentication required)
-- `GET /applications`: View application history (authentication required)
-- `DELETE /applications/:id`: Cancel a specific job application (authentication required)
+- `GET /applications`: Retrieve application history (authentication required)
+- `DELETE /applications/:id`: Cancel a job application (authentication required)
 
-### Bookmarks
-- `POST /bookmarks`: Add or remove a job bookmark (authentication required)
-- `GET /bookmarks`: View saved bookmarks (authentication required)
+### Bookmarks (`/bookmarks`)
+- `POST /bookmarks`: Add or remove job bookmarks (authentication required)
+- `GET /bookmarks`: Retrieve saved bookmarks (authentication required)
 
-## 📁 Project Structure
+## 🕌 Project Structure
+
 ```
 JOB_SEARCHING_API/
-├── node_modules/             
-├── src/                      
-│   ├── controllers/          
+├── node_modules/
+├── src/
+│   ├── controllers/
 │   │   ├── applicationController.js  # Handles job applications
-│   │   ├── authController.js         # Handles authentication
+│   │   ├── authController.js         # Handles user authentication
 │   │   ├── bookmarkController.js     # Handles bookmarks
 │   │   └── jobController.js          # Manages job postings
-│   ├── middleware/           
-│   │   ├── authMiddleware.js        # Authentication and authorization
-│   │   ├── errorMiddleware.js       # Global error handling
-│   │   ├── cacheMiddleware.js       # Response caching with Redis
-│   │   ├── validationMiddleware.js       
-│   │   └── securityMiddleware.js    # Security-related features
-│   ├── models/               
-│   │   ├── Application.js          # Job application schema
-│   │   ├── Bookmark.js             # Bookmark schema
-│   │   ├── Company.js              # Company schema
-│   │   ├── Jobs.js                 # Job postings schema
-│   │   ├── TokenBlacklist.js       # Token blacklist schema
-│   │   └── User.js                 # User account schema
-│   ├── routes/              
-│   │   ├── applicationRoutes.js    # Routes for job applications
-│   │   ├── authRoutes.js           # Routes for authentication
-│   │   ├── bookmarkRoutes.js       # Routes for bookmarks
-│   │   └── jobRoutes.js            # Routes for job postings
-│   └── scraper/              # Web scraping logic
-│       ├── index.js               
-│       └── scraper.js             
-├── .env                      # Environment variables
-├── .gitignore                
-├── app.js                    # Express app configuration
-├── database.js               
-├── server.js                 # Server entry point
-├── swagger.js                
-├── package.json              
-├── package-lock.json         
-└── README.md                 
+│   ├── middleware/
+│   │   ├── authMiddleware.js         # Authentication and authorization
+│   │   ├── cacheMiddleware.js        # Caching with Redis
+│   │   ├── errorMiddleware.js        # Global error handling
+│   │   ├── rateLimitMiddleware.js    # Rate limiting
+│   │   └── validationMiddleware.js   # Request validation with Joi
+│   ├── models/
+│   │   ├── Application.js            # Job application schema
+│   │   ├── Bookmark.js               # Bookmark schema
+│   │   ├── Company.js                # Company schema
+│   │   ├── Jobs.js                   # Job postings schema
+│   │   ├── TokenBlacklist.js         # Blacklisted JWT tokens
+│   │   └── User.js                   # User schema
+│   ├── routes/
+│   │   ├── applicationRoutes.js      # Routes for applications
+│   │   ├── authRoutes.js             # Routes for authentication
+│   │   ├── bookmarkRoutes.js         # Routes for bookmarks
+│   │   └── jobRoutes.js              # Routes for job postings
+│   ├── schemas/                      # Joi validation schemas
+│   │   ├── applicationSchemas.js
+│   │   ├── authSchemas.js
+│   │   ├── bookmarkSchemas.js
+│   │   └── jobSchemas.js
+│   ├── scraper/                      # Web scraping logic
+│   │   ├── index.js
+│   │   └── scraper.js
+├── .env                              # Environment variables
+├── .gitignore
+├── app.js                            # Express app configuration
+├── database.js                       # MongoDB connection
+├── server.js                         # Main server entry point
+├── swagger.js                        # Swagger API documentation setup
+├── package.json
+├── package-lock.json
+└── README.md
 ```
 
 ## 🚀 Technologies
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- Caching: Redis
-- Authentication: JWT
-- Web Scraping: Axios, Cheerio
-- API Documentation: Swagger
+
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB, Redis
+- **Authentication:** JWT with refresh token support
+- **Validation:** Joi
+- **Web Scraping:** Axios, Cheerio, ScraperAPI
+- **API Documentation:** Swagger
 
 ## 📋 Usage
 
-1. Access Swagger documentation: `https://cjinyeong.duckdns.org:13030/api-docs/`
-2. Use Postman or Curl to test endpoints
-3. Check console logs for server activity
+1. **Access Swagger Documentation:**
+   - Visit: `https://cjinyeong.duckdns.org:13030/api-docs/`
+            `https://<your-domain>/api-docs/`
+   - Interactive testing and API documentation.
+
+2. **Test Endpoints with Postman:**
+   - Import the provided Postman collection.
+
+3. **Monitor Logs:**
+   - Logs can be found in the console during development.
+
+- **Project Dependencies:**
+  ```bash
+  npm install express mongoose joi redis jsonwebtoken bcrypt swagger-jsdoc swagger-ui-express
+  ```
+
+
+
