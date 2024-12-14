@@ -111,7 +111,6 @@ exports.getJobStats = async (req, res) => {
         if (filter) {
             try {
                 const filters = JSON.parse(filter); // JSON 파싱
-                console.log(filters)
                 for (const key in filters) {
                     if (typeof filters[key] === 'string') {
                         matchStage[key] = { $regex: filters[key], $options: "i" };
