@@ -6,27 +6,29 @@ const TokenBlacklist = require('../models/TokenBlacklist');
  */
 exports.authenticate = async (req, res, next) => {
     try {
-        // Extract the token from the Authorization header
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
+            console.log('Token not found in headers');
             return res.status(401).json({ status: 'error', message: 'Authentication token required' });
         }
 
-        // Check if the token is blacklisted
         const isBlacklisted = await TokenBlacklist.findOne({ token });
         if (isBlacklisted) {
+            console.log('Token is blacklisted');
             return res.status(401).json({ status: 'error', message: 'Token is blacklisted' });
         }
 
-        // Verify the token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // Attach the decoded payload to the request object
+        console.log('Decoded payload:', decoded); // 디버깅
+        req.user = decoded;
 
-        next(); // Proceed to the next middleware or route handler
+        next();
     } catch (err) {
+        console.error('JWT verification error:', err.message); // 디버깅
         return res.status(401).json({ status: 'error', message: 'Invalid or expired token' });
     }
 };
+
 
 /**
  * Middleware to authorize users based on their roles
