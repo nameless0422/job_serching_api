@@ -7,6 +7,45 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /preferences/{userId}:
+ *   get:
+ *     summary: Retrieve user preferences by userId
+ *     tags: [Preferences]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user whose preferences are being retrieved
+ *     responses:
+ *       200:
+ *         description: User preferences retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PreferencesResponse'
+ *             examples:
+ *               example-1:
+ *                 value:
+ *                   status: success
+ *                   data:
+ *                     userId: "675cc180a59ec8122a6ef03a"
+ *                     preferredJobTypes: ["python", "java"]
+ *                     preferredLocations: ["서울", "부산"]
+ *                     notificationSettings:
+ *                       email: true
+ *                       sms: false
+ *                       push: true
+ *       404:
+ *         description: Preferences not found for the given user ID
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/:userId', getPreferences);
+
+/**
+ * @swagger
  * /preferences:
  *   post:
  *     summary: Save or update user preferences
