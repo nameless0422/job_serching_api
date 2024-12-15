@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPreferences, updatePreferences } = require('../controllers/preferencesController');
+const { getPreferences, updatePreferences } = require('../controllers/preferenceController');
 const validate = require('../middleware/validationMiddleware');
 const { preferencesSchema } = require('../schemas/preferencesSchema');
 const { authenticate } = require('../middleware/authMiddleware');

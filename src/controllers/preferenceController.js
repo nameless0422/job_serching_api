@@ -1,4 +1,4 @@
-const Preferences = require('../models/Preferences');
+const Preferences = require('../models/Preference');
 
 /**
  * Get user preferences
