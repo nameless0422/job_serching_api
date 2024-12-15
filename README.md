@@ -120,6 +120,7 @@ JOB_SEARCHING_API/
 │   ├── controllers/
 │   │   ├── applicationController.js  # Handles job applications
 │   │   ├── authController.js         # Handles user authentication
+│   │   ├── preferenceController.js   # Handles preference
 │   │   ├── bookmarkController.js     # Handles bookmarks
 │   │   └── jobController.js          # Manages job postings
 │   ├── middleware/
@@ -133,17 +134,21 @@ JOB_SEARCHING_API/
 │   │   ├── Bookmark.js               # Bookmark schema
 │   │   ├── Company.js                # Company schema
 │   │   ├── Jobs.js                   # Job postings schema
+│   │   ├── Preference.js             # Preference schema
 │   │   ├── TokenBlacklist.js         # Blacklisted JWT tokens
 │   │   └── User.js                   # User schema
 │   ├── routes/
 │   │   ├── applicationRoutes.js      # Routes for applications
 │   │   ├── authRoutes.js             # Routes for authentication
 │   │   ├── bookmarkRoutes.js         # Routes for bookmarks
+│   │   ├── preferenceRoutes.js       # Routes for preference
 │   │   └── jobRoutes.js              # Routes for job postings
 │   ├── schemas/                      # Joi validation schemas
 │   │   ├── applicationSchemas.js
 │   │   ├── authSchemas.js
 │   │   ├── bookmarkSchemas.js
+│   │   ├── preferencesSchema.js
+│   │   ├── commonSchemas.js
 │   │   └── jobSchemas.js
 │   └── scraper/                      # Web scraping logic
 │       ├── index.js
