@@ -37,24 +37,36 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // 사용자를 이메일로 찾기
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ status: 'error', message: 'Invalid email or password' });
         }
 
+        // 비밀번호 확인
         const isMatch = await bcrypt.compare(Buffer.from(password).toString('base64'), user.password);
         if (!isMatch) {
             return res.status(401).json({ status: 'error', message: 'Invalid email or password' });
         }
 
+        // 액세스 토큰 및 리프레시 토큰 생성
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        res.json({ status: 'success', data: { accessToken, refreshToken } });
+        // 사용자 ID와 토큰 반환
+        res.json({
+            status: 'success',
+            data: {
+                userId: user.id, // 사용자 ID 추가
+                accessToken,
+                refreshToken
+            }
+        });
     } catch (err) {
         res.status(500).json({ status: 'error', message: err.message });
     }
 };
+
 
 // 토큰 갱신
 exports.refreshToken = async (req, res) => {
