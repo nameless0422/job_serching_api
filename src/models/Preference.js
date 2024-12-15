@@ -1,38 +1,27 @@
 const mongoose = require('mongoose');
 
-const preferenceSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+const preferencesSchema = new mongoose.Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        preferredJobTypes: {
+            type: [String],
+            required: true,
+        },
+        preferredLocations: {
+            type: [String],
+            required: true,
+        },
+        notificationSettings: {
+            email: { type: Boolean, required: true },
+            sms: { type: Boolean, required: true },
+            push: { type: Boolean, required: true },
+        },
     },
-    preferredLocations: [
-      {
-        type: String,
-      },
-    ],
-    preferredJobTypes: [
-      {
-        type: String,
-      },
-    ],
-    notificationSettings: {
-      email: {
-        type: Boolean,
-        default: true,
-      },
-      sms: {
-        type: Boolean,
-        default: false,
-      },
-      push: {
-        type: Boolean,
-        default: true,
-      },
-    },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
-module.exports = mongoose.model('Preference', preferenceSchema);
+module.exports = mongoose.model('Preferences', preferencesSchema);

@@ -1,10 +1,8 @@
 const express = require('express');
+const { getPreferences, updatePreferences } = require('../controllers/preferencesController');
+const validate = require('../middleware/validationMiddleware');
+const { preferencesSchema } = require('../schemas/preferencesSchema');
 const { authenticate } = require('../middleware/authMiddleware');
-const {
-  getPreferences,
-  setPreferences,
-  deletePreferences,
-} = require('../controllers/preferenceController');
 
 const router = express.Router();
 
@@ -18,11 +16,12 @@ const router = express.Router();
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Successfully retrieved user preferences
+ *         description: User preferences retrieved successfully
  *       404:
  *         description: Preferences not found
- *       500:
- *         description: Internal server error
+ */
+/**
+ * 사용자 환경설정 조회
  */
 router.get('/', authenticate, getPreferences);
 
@@ -30,7 +29,7 @@ router.get('/', authenticate, getPreferences);
  * @swagger
  * /preferences:
  *   post:
- *     summary: Create or update user preferences
+ *     summary: Update user preferences
  *     tags: [Preferences]
  *     security:
  *       - bearerAuth: []
@@ -39,49 +38,18 @@ router.get('/', authenticate, getPreferences);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               preferredLocations:
- *                 type: array
- *                 items:
- *                   type: string
- *               preferredJobTypes:
- *                 type: array
- *                 items:
- *                   type: string
- *               notificationSettings:
- *                 type: object
- *                 properties:
- *                   email:
- *                     type: boolean
- *                   sms:
- *                     type: boolean
- *                   push:
- *                     type: boolean
+ *             $ref: '#/components/schemas/Preferences'
  *     responses:
  *       200:
- *         description: Preferences updated successfully
+ *         description: User preferences updated successfully
+ *       400:
+ *         description: Validation failed
  *       500:
  *         description: Internal server error
  */
-router.post('/', authenticate, setPreferences);
-
 /**
- * @swagger
- * /preferences:
- *   delete:
- *     summary: Delete user preferences
- *     tags: [Preferences]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Preferences deleted successfully
- *       404:
- *         description: Preferences not found
- *       500:
- *         description: Internal server error
+ * 사용자 환경설정 저장/수정
  */
-router.delete('/', authenticate, deletePreferences);
+router.post('/', authenticate, validate(preferencesSchema), updatePreferences);
 
 module.exports = router;
