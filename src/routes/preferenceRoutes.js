@@ -1,7 +1,7 @@
 const express = require('express');
-const { savePreferences } = require('../controllers/preferencesController');
+const { savePreferences } = require('../controllers/preferenceController');
 const validate = require('../middleware/validationMiddleware');
-const { preferencesSchema } = require('../schemas/preferencesSchemas');
+const { preferencesSchema } = require('../schemas/preferencesSchema');
 
 const router = express.Router();
 
