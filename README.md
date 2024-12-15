@@ -145,9 +145,9 @@ JOB_SEARCHING_API/
 │   │   ├── authSchemas.js
 │   │   ├── bookmarkSchemas.js
 │   │   └── jobSchemas.js
-│   ├── scraper/                      # Web scraping logic
-│   │   ├── index.js
-│   │   └── scraper.js
+│   └── scraper/                      # Web scraping logic
+│       ├── index.js
+│       └── scraper.js
 ├── .env                              # Environment variables
 ├── .gitignore
 ├── app.js                            # Express app configuration
