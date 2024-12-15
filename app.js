@@ -8,6 +8,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const jobRoutes = require('./src/routes/jobRoutes');
 const applicationRoutes = require('./src/routes/applicationRoutes');
 const bookmarkRoutes = require('./src/routes/bookmarkRoutes');
+const preferenceRoutes = require('./src/routes/preferenceRoutes');
 const { globalErrorHandler } = require('./src/middleware/errorMiddleware');
 const { xssProtection, secureHeaders, rateLimiter } = require('./src/middleware/sercurityMiddleware');
 const setupSwagger = require('./swagger');
@@ -50,6 +51,7 @@ app.use('/auth', authRoutes); // 회원 관리 API
 app.use('/jobs', jobRoutes); // 채용 공고 API
 app.use('/applications', applicationRoutes); // 지원 관리 API
 app.use('/bookmarks', bookmarkRoutes); // 북마크 관리 API
+app.use('/preferences', preferenceRoutes); // 설정 관리 API
 
 // 글로벌 에러 처리 미들웨어
 app.use(globalErrorHandler);
