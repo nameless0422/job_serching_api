@@ -181,10 +181,4 @@ JOB_SEARCHING_API/
 3. **Monitor Logs:**
    - Logs can be found in the console during development.
 
-- **Project Dependencies:**
-  ```bash
-  npm install express mongoose joi redis jsonwebtoken bcrypt swagger-jsdoc swagger-ui-express
-  ```
-
-
 
