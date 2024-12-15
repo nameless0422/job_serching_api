@@ -1,5 +1,5 @@
 const express = require('express');
-const { savePreferences } = require('../controllers/preferenceController');
+const { savePreferences , getPreferences} = require('../controllers/preferenceController');
 const validate = require('../middleware/validationMiddleware');
 const { preferencesSchema } = require('../schemas/preferencesSchema');
 
